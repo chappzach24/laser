@@ -9,8 +9,9 @@ const port = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 
-// MongoDB Atlas URI
+
 const uri = process.env.MONGODB_URI;
+console.log('MongoDB URI:', uri);
 mongoose.connect(uri, { useNewUrlParser: true });
 const connection = mongoose.connection;
 connection.once('open', () => {
