@@ -1,4 +1,4 @@
-const User = require('../models/user.model');
+const User = require("../models/user.model");
 
 // Create a new user
 exports.createUser = async (req, res) => {
@@ -26,7 +26,7 @@ exports.getUserById = async (req, res) => {
   try {
     const user = await User.findById(req.params.id);
     if (!user) {
-      return res.status(404).json({ message: 'User not found' });
+      return res.status(404).json({ message: "User not found" });
     }
     res.json(user);
   } catch (err) {
@@ -37,9 +37,11 @@ exports.getUserById = async (req, res) => {
 // Update a user by ID
 exports.updateUserById = async (req, res) => {
   try {
-    const updatedUser = await User.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    const updatedUser = await User.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+    });
     if (!updatedUser) {
-      return res.status(404).json({ message: 'User not found' });
+      return res.status(404).json({ message: "User not found" });
     }
     res.json(updatedUser);
   } catch (err) {
@@ -52,9 +54,9 @@ exports.deleteUserById = async (req, res) => {
   try {
     const deletedUser = await User.findByIdAndDelete(req.params.id);
     if (!deletedUser) {
-      return res.status(404).json({ message: 'User not found' });
+      return res.status(404).json({ message: "User not found" });
     }
-    res.json({ message: 'User deleted successfully' });
+    res.json({ message: "User deleted successfully" });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
