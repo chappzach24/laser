@@ -4,37 +4,34 @@ const Home = () => {
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const response = await fetch('http://localhost:5000/api/products');
-        const data = await response.json();
-        console.log("Fetched Products:", data); // Log data to check what is fetched
+    fetch('http://localhost:5000/api/products')
+      .then(response => response.json())
+      .then(data => {
+        console.log('Fetched Products:', data);
         setProducts(data);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
-    };
-
-    fetchProducts();
+      })
+      .catch(error => console.error('Error fetching data:', error));
   }, []);
-
-  if (products.length === 0) {
-    return <p>No products available.</p>;
-  }
 
   return (
     <div>
       <h1>Home Page</h1>
-      {products.map(product => (
-        <div key={product._id}>
-          <h2>{product.name}</h2>
-          <p>{product.description}</p>
-          <p>Price: ${product.price?.toFixed(2) || 'N/A'}</p>
-          <p>Category: {product.category}</p>
-          <img src={product.imageUrl} alt={product.name} style={{ width: '100px' }} />
-          <p>Stock: {product.stockQuantity}</p>
-        </div>
-      ))}
+      {products.length > 0 ? (
+        products.map(product => (
+          <div key={product._id} style={{ marginBottom: '20px', border: '1px solid #ddd', padding: '10px' }}>
+            <h2>{product.name}</h2>
+            <p>{product.description}</p>
+            <p>Price: ${product.price !== undefined ? product.price.toFixed(2) : 'N/A'}</p>
+            <p>Category: {product.category}</p>
+            {product.imageUrl && (
+              <img src={product.imageUrl} alt={product.name} style={{ width: '100px' }} />
+            )}
+            <p>Stock: {product.stockQuantity}</p>
+          </div>
+        ))
+      ) : (
+        <p>No products available.</p>
+      )}
     </div>
   );
 };
