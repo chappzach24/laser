@@ -15,11 +15,12 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "mongoose": "^7.0.0",
+    "bcrypt": "^5.1.1",
+    "bootstrap": "^5.3.3",
+    "concurrently": "^8.2.2",
     "cors": "^2.8.5",
     "dotenv": "^16.0.0",
     "jsonwebtoken": "^9.0.2",
-    "concurrently": "^8.2.2",
-    "bootstrap": "^5.3.3"
+    "mongoose": "^7.0.0"
   }
 }

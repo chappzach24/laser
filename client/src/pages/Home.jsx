@@ -13,27 +13,34 @@ const Home = () => {
       .catch(error => console.error('Error fetching data:', error));
   }, []);
 
-  return (
-    <div>
-      <h1>Home Page</h1>
-      {products.length > 0 ? (
-        products.map(product => (
-          <div key={product._id} style={{ marginBottom: '20px', border: '1px solid #ddd', padding: '10px' }}>
-            <h2>{product.name}</h2>
-            <p>{product.description}</p>
-            <p>Price: ${product.price !== undefined ? product.price.toFixed(2) : 'N/A'}</p>
-            <p>Category: {product.category}</p>
-            {product.imageUrl && (
-              <img src={product.imageUrl} alt={product.name} style={{ width: '100px' }} />
-            )}
-            <p>Stock: {product.stockQuantity}</p>
-          </div>
-        ))
-      ) : (
-        <p>No products available.</p>
-      )}
-    </div>
-  );
-};
+    return (
+      <div>
+        <h1>Home Page</h1>
+        <div className="d-flex flex-wrap"> 
+          {products.length > 0 ? (
+            products.map(product => (
+              <div key={product._id} className="card" style={{ width: '18rem', margin: '10px' }}>
+                <img 
+                  className="card-img-top" 
+                  src={product.imageUrl} 
+                  alt={product.name} 
+                  style={{ maxHeight: '180px', objectFit: 'cover' }}
+                />
+                <div className="card-body">
+                  <h5 className="card-title">{product.name}</h5>
+                  <p className="card-text">{product.description}</p>
+                  <p className="card-text">Price: ${product.price ? product.price.toFixed(2) : 'N/A'}</p>
+                  <p className="card-text">Stock: {product.stockQuantity}</p>
+                  <a href="#" className="btn btn-primary">Add to Cart</a>
+                </div>
+              </div>
+            ))
+          ) : (
+            <p>No products available.</p>
+          )}
+        </div>
+      </div>
+    );
+  };
 
 export default Home;
