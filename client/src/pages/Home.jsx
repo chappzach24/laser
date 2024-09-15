@@ -7,7 +7,7 @@ const Home = () => {
     fetch('http://localhost:5000/api/products')
       .then(response => response.json())
       .then(data => {
-        // console.log('Fetched Products:', data);
+        console.log('Fetched Products:', data);
         setProducts(data);
       })
       .catch(error => console.error('Error fetching data:', error));

@@ -2,14 +2,15 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./index.css";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import App from "./App.jsx";
 import Home from "./pages/Home.jsx";
 import Cart from "./pages/Cart.jsx";
 import ErrorPage from "./components/ErrorPage.jsx";
 import SignUp from "./components/SignUp.jsx";
 import Login from "./components/Login.jsx";
+import AdminPage from "./pages/AdminPage.jsx";
 import { AuthProvider } from "./context/AuthContext.jsx";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 const router = createBrowserRouter([
   {
@@ -32,7 +33,13 @@ const router = createBrowserRouter([
       {
         path: "signup",
         element: <SignUp />,
-      }
+      },
+      {
+        path: "admin",
+        element: <AdminPage />,
+      },
+      
+      
     ],
   },
 ]);
