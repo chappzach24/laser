@@ -7,7 +7,7 @@ const Home = () => {
     fetch('http://localhost:5000/api/products')
       .then(response => response.json())
       .then(data => {
-        console.log('Fetched Products:', data);
+        // console.log('Fetched Products:', data);
         setProducts(data);
       })
       .catch(error => console.error('Error fetching data:', error));
@@ -15,7 +15,7 @@ const Home = () => {
 
     return (
       <div>
-        <h1>Home Page</h1>
+        
         <div className="d-flex flex-wrap"> 
           {products.length > 0 ? (
             products.map(product => (
@@ -30,7 +30,7 @@ const Home = () => {
                   <h5 className="card-title">{product.name}</h5>
                   <p className="card-text">{product.description}</p>
                   <p className="card-text">Price: ${product.price ? product.price.toFixed(2) : 'N/A'}</p>
-                  <p className="card-text">Stock: {product.stockQuantity}</p>
+                  {/* <p className="card-text">Stock: {product.stockQuantity}</p> */}
                   <a href="#" className="btn btn-primary">Add to Cart</a>
                 </div>
               </div>
