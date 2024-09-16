@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 
 const AdminPage = () => {
   const [formData, setFormData] = useState({
@@ -10,6 +10,7 @@ const AdminPage = () => {
     stockQuantity: ''
   });
 
+  const [imageFile, setImageFile] = useState(null); // Add state to hold image file
   const [isEditing, setIsEditing] = useState(false);
   const [productId, setProductId] = useState(null);
 
@@ -20,14 +21,44 @@ const AdminPage = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  // Handle image file change
+  const handleImageChange = (e) => {
+    setImageFile(e.target.files[0]);
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Upload image to Cloudinary
+    if (imageFile) {
+      const formDataForImage = new FormData();
+      formDataForImage.append('image', imageFile);
+
+      try {
+        const cloudinaryResponse = await fetch('http://localhost:5000/api/upload', {
+          method: 'POST',
+          body: formDataForImage
+        });
+        const cloudinaryData = await cloudinaryResponse.json();
+
+        // Add image URL to formData
+        setFormData((prevFormData) => ({
+          ...prevFormData,
+          imageUrl: cloudinaryData.imageUrl // Use Cloudinary URL
+        }));
+      } catch (err) {
+        console.error('Image upload failed:', err);
+        return;
+      }
+    }
+
     const url = isEditing
       ? `http://localhost:5000/api/products/${productId}`
       : 'http://localhost:5000/api/products';
 
     const method = isEditing ? 'PUT' : 'POST';
 
+    // Submit product data
     fetch(url, {
       method: method,
       headers: { 'Content-Type': 'application/json' },
@@ -57,7 +88,10 @@ const AdminPage = () => {
         <textarea name="description" placeholder="Product Description" value={formData.description} onChange={handleChange} required />
         <input type="number" name="price" placeholder="Price" value={formData.price} onChange={handleChange} required />
         <input type="text" name="category" placeholder="Category" value={formData.category} onChange={handleChange} />
-        <input type="text" name="imageUrl" placeholder="Image URL" value={formData.imageUrl} onChange={handleChange} />
+        
+        {/* Image Upload */}
+        <input type="file" name="image" onChange={handleImageChange} />
+        
         <input type="number" name="stockQuantity" placeholder="Stock Quantity" value={formData.stockQuantity} onChange={handleChange} required />
         <button type="submit">{isEditing ? 'Update' : 'Add'} Product</button>
       </form>

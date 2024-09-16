@@ -1,7 +1,26 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const cloudinary = require('cloudinary').v2;
+const { CloudinaryStorage } = require('multer-storage-cloudinary');
+const multer = require('multer');
 require('dotenv').config();
+
+cloudinary.config({
+  cloud_name: process.env.CLOUD_NAME,  
+  api_key: process.env.CLOUDINARY_API_KEY,  
+  api_secret: process.env.CLOUDINARY_API_SECRET,  
+});
+
+const storage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: {
+    folder: 'product-images',
+    allowed_formats: ['jpg', 'png'], 
+  },
+});
+
+const upload = multer({ storage });
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -22,7 +41,16 @@ const userRouter = require('./routes/user.routes');
 const productRouter = require('./routes/product.routes');
 const cartRouter = require('./routes/cart.routes');
 
-// Using routes
+// Image upload route
+app.post('/api/upload', upload.single('image'), (req, res) => {
+  if (req.file && req.file.path) {
+    res.json({ imageUrl: req.file.path });
+  } else {
+    res.status(400).json({ message: 'Image upload failed' });
+  }
+});
+
+
 app.use('/api', userRouter);
 app.use('/api', productRouter);
 app.use('/api', cartRouter);
