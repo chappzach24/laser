@@ -3,10 +3,11 @@ import { Link } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext.jsx";
 
 const Navbar = () => {
-  const { isAuthenticated, logout } = useContext(AuthContext);
+  const { isAuthenticated, user, logout } = useContext(AuthContext);
 
-  // See if Auth is working or not
-  // console.log('isAuthenticated:', isAuthenticated);
+  // Add log to check user data in the Navbar
+  console.log("Navbar User:", user);
+  console.log("Is Authenticated:", isAuthenticated);
 
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
@@ -31,6 +32,14 @@ const Navbar = () => {
             <li className="nav-item">
               <Link className="nav-link" to="/cart">Cart</Link>
             </li>
+
+            {/* Conditionally show Admin link if user role is 'admin' */}
+            {isAuthenticated && user?.role === 'admin' && (
+              <li className="nav-item">
+                <Link className="nav-link" to="/admin">Admin</Link>
+              </li>
+            )}
+
             {isAuthenticated ? (
               <li className="nav-item">
                 <button className="nav-link btn" onClick={logout}>

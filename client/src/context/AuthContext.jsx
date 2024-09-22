@@ -9,9 +9,10 @@ export const AuthProvider = ({ children }) => {
   // Login function stores token and user data
   const login = (userData) => {
     setIsAuthenticated(true);
-    setUser(userData);
+    setUser(userData.user);  
     localStorage.setItem('token', userData.token);
-    localStorage.setItem('user', JSON.stringify(userData));
+    localStorage.setItem('user', JSON.stringify(userData.user));  
+    console.log('User logged in:', userData.user);
   };
 
   // Logout function clears token and user data
@@ -24,6 +25,7 @@ export const AuthProvider = ({ children }) => {
 
   // Check if user is already logged in when the app loads
   useEffect(() => {
+    //  console.log("Stored User:", JSON.parse(storedUser));
     const token = localStorage.getItem('token');
     const storedUser = localStorage.getItem('user');
 
