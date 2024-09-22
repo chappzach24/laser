@@ -1,102 +1,62 @@
-import React, { useState } from 'react';
+import React, { useContext } from "react";
+import { Link } from "react-router-dom";
+import { AuthContext } from "../context/AuthContext";
 
-const AdminPage = () => {
-  const [formData, setFormData] = useState({
-    name: '',
-    description: '',
-    price: '',
-    category: '',
-    imageUrl: '',
-    stockQuantity: ''
-  });
-
-  const [imageFile, setImageFile] = useState(null); // Add state to hold image file
-  const [isEditing, setIsEditing] = useState(false);
-  const [productId, setProductId] = useState(null);
-
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
-  };
-
-  // Handle image file change
-  const handleImageChange = (e) => {
-    setImageFile(e.target.files[0]);
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    // Upload image to Cloudinary
-    if (imageFile) {
-      const formDataForImage = new FormData();
-      formDataForImage.append('image', imageFile);
-
-      try {
-        const cloudinaryResponse = await fetch('http://localhost:5000/api/upload', {
-          method: 'POST',
-          body: formDataForImage
-        });
-        const cloudinaryData = await cloudinaryResponse.json();
-
-        // Add image URL to formData
-        setFormData((prevFormData) => ({
-          ...prevFormData,
-          imageUrl: cloudinaryData.imageUrl // Use Cloudinary URL
-        }));
-      } catch (err) {
-        console.error('Image upload failed:', err);
-        return;
-      }
-    }
-
-    const url = isEditing
-      ? `http://localhost:5000/api/products/${productId}`
-      : 'http://localhost:5000/api/products';
-
-    const method = isEditing ? 'PUT' : 'POST';
-
-    // Submit product data
-    fetch(url, {
-      method: method,
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(formData)
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        alert(`Product ${isEditing ? 'updated' : 'created'} successfully!`);
-        setFormData({
-          name: '',
-          description: '',
-          price: '',
-          category: '',
-          imageUrl: '',
-          stockQuantity: ''
-        });
-        setIsEditing(false);
-      })
-      .catch((err) => console.error('Error:', err));
-  };
+const Navbar = () => {
+  const { isAuthenticated, user, logout } = useContext(AuthContext);
 
   return (
-    <div>
-      <h1>{isEditing ? 'Edit Product' : 'Add Product'}</h1>
-      <form onSubmit={handleSubmit}>
-        <input type="text" name="name" placeholder="Product Name" value={formData.name} onChange={handleChange} required />
-        <textarea name="description" placeholder="Product Description" value={formData.description} onChange={handleChange} required />
-        <input type="number" name="price" placeholder="Price" value={formData.price} onChange={handleChange} required />
-        <input type="text" name="category" placeholder="Category" value={formData.category} onChange={handleChange} />
-        
-        {/* Image Upload */}
-        <input type="file" name="image" onChange={handleImageChange} />
-        
-        <input type="number" name="stockQuantity" placeholder="Stock Quantity" value={formData.stockQuantity} onChange={handleChange} required />
-        <button type="submit">{isEditing ? 'Update' : 'Add'} Product</button>
-      </form>
-    </div>
+    <nav className="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
+      <div className="container-fluid">
+        <Link className="navbar-brand" to="/">My Store</Link>
+        <button
+          className="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span className="navbar-toggler-icon"></span>
+        </button>
+        <div className="collapse navbar-collapse" id="navbarNav">
+          <ul className="navbar-nav ms-auto">
+            <li className="nav-item">
+              <Link className="nav-link" to="/">Home</Link>
+            </li>
+            <li className="nav-item">
+              <Link className="nav-link" to="/cart">Cart</Link>
+            </li>
+
+            {/* Conditionally render Admin link if user has admin role */}
+            {isAuthenticated && user?.role === 'admin' && (
+              <li className="nav-item">
+                <Link className="nav-link" to="/admin">Admin</Link>
+              </li>
+            )}
+
+            {isAuthenticated ? (
+              <li className="nav-item">
+                <button className="nav-link btn" onClick={logout}>
+                  Logout
+                </button>
+              </li>
+            ) : (
+              <>
+                <li className="nav-item">
+                  <Link className="nav-link" to="/login">Login</Link>
+                </li>
+                <li className="nav-item">
+                  <Link className="nav-link" to="/signup">Sign Up</Link>
+                </li>
+              </>
+            )}
+          </ul>
+        </div>
+      </div>
+    </nav>
   );
 };
 
-export default AdminPage;
+export default Navbar;
