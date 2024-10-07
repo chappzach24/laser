@@ -1,12 +1,13 @@
-import React, { useContext } from "react";
-import { Link } from "react-router-dom";
+import React from "react";
+import AdminProductManagement from "./AdminProductManagement";
 
-
-const Navbar = () => {
-  
+const AdminPage = () => {
   return (
-   
+    <div className="container">
+      <h1 className="my-4">Admin Dashboard</h1>
+      <AdminProductManagement />
+    </div>
   );
 };
 
-export default Navbar;
+export default AdminPage;

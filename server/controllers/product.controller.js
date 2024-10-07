@@ -54,16 +54,31 @@ exports.getProductById = async (req, res) => {
 // Update a product by ID
 exports.updateProductById = async (req, res) => {
   try {
+    console.log('Updating product:', req.params.id);
+    console.log('Received data:', req.body);
+
+    const updateData = { ...req.body };
+
+    // Handle image update if a new file is uploaded
+    if (req.file) {
+      console.log('New image file:', req.file);
+      updateData.imageUrl = req.file.path;
+    }
+
     const updatedProduct = await Product.findByIdAndUpdate(
       req.params.id,
-      req.body,
+      updateData,
       { new: true }
     );
+
     if (!updatedProduct) {
       return res.status(404).json({ message: "Product not found" });
     }
+
+    console.log('Updated product:', updatedProduct);
     res.json(updatedProduct);
   } catch (err) {
+    console.error('Error updating product:', err);
     res.status(400).json({ message: err.message });
   }
 };
